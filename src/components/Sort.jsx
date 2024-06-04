@@ -1,7 +1,7 @@
 import React from 'react';
 import Search from './Search';
 
-const Sort = ({ value, searchValue, setSearchValue, onChangeSort }) => {
+const Sort = ({ value, onChangeSort }) => {
   const [open, setOpen] = React.useState(false);
 
   const list = [
@@ -19,7 +19,7 @@ const Sort = ({ value, searchValue, setSearchValue, onChangeSort }) => {
 
   return (
     <div className="sort">
-      <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+      <Search />
       <div className="sort__label">
         {open ? (
           <svg

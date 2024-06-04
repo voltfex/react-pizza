@@ -6,6 +6,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import axios from 'axios';
 import Pagination from '../components/Pagination';
+import { SearchContext } from '../App';
 
 const Home = () => {
   const [items, setItems] = React.useState([]);
@@ -15,7 +16,7 @@ const Home = () => {
     name: 'популярности',
     sortProperty: 'rating',
   });
-  const [searchValue, setSearchValue] = React.useState('');
+  const { searchValue } = React.useContext(SearchContext);
   const [curentPage, setCurentPage] = React.useState(1);
 
   React.useEffect(() => {
@@ -25,7 +26,7 @@ const Home = () => {
     // const search = searchValue ? `&search=${searchValue}` : '';
     axios
       .get(
-        `https://66562e759f970b3b36c48e64.mockapi.io/items?page=${curentPage}&limit=4${
+        `https://66562e759f970b3b36c48e64.mockapi.io/items?page=${curentPage}&limit=4&${
           categoryId ? `category=${categoryId}` : ''
         }&sortBy=${sortBy}&order=${order}`,
       )
@@ -42,12 +43,7 @@ const Home = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onChangeCategory={(id) => setCategoryId(id)} />
-        <Sort
-          value={sortType}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          onChangeSort={(id) => setSortType(id)}
-        />
+        <Sort value={sortType} onChangeSort={(id) => setSortType(id)} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
