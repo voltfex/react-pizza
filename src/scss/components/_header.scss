@@ -30,16 +30,16 @@
     }
   }
 
-  @media (max-width: 540px) {
+  .header__cart {
+    margin-top: 20px;
+  } 
+
+  @media (max-width: 560px) {
     .container {
       display: flex;
       flex-direction: column;
       text-align: center;
       align-items: center;
-    }
-
-    .header__cart {
-      margin-top: 20px;
     }
   }
 }

@@ -1,15 +1,16 @@
 import React from 'react';
+import Search from './Search';
 
-const Sort = ({ value, onChangeSort }) => {
+const Sort = ({ value, searchValue, setSearchValue, onChangeSort }) => {
   const [open, setOpen] = React.useState(false);
 
   const list = [
-    { name: 'популярности ↑', sortProperty: 'rating' },
-    { name: 'популярности ↓', sortProperty: '-rating' },
-    { name: 'цене ↑', sortProperty: 'price' },
-    { name: 'цене ↓', sortProperty: '-price' },
-    { name: 'алфавиту ↑', sortProperty: 'title' },
-    { name: 'алфавиту ↓', sortProperty: '-title' },
+    { name: 'популярности ↓', sortProperty: 'rating' },
+    { name: 'популярности ↑', sortProperty: '-rating' },
+    { name: 'цене ↓', sortProperty: 'price' },
+    { name: 'цене ↑', sortProperty: '-price' },
+    { name: 'алфавиту ↓', sortProperty: 'title' },
+    { name: 'алфавиту ↑', sortProperty: '-title' },
   ];
   const onClickListItem = (i) => {
     onChangeSort(i);
@@ -18,6 +19,7 @@ const Sort = ({ value, onChangeSort }) => {
 
   return (
     <div className="sort">
+      <Search searchValue={searchValue} setSearchValue={setSearchValue} />
       <div className="sort__label">
         {open ? (
           <svg
