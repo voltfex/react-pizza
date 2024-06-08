@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setCategoryId } from '../redux/slices/filterSlice';
+import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
@@ -12,15 +12,19 @@ import { SearchContext } from '../App';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { categoryId, sort } = useSelector((state) => state.filter);
+  const { categoryId, sort, curentPage } = useSelector((state) => state.filter);
 
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const { searchValue } = React.useContext(SearchContext);
-  const [curentPage, setCurentPage] = React.useState(1);
+
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
     console.log(id);
+  };
+
+  const onChangePage = (number) => {
+    dispatch(setCurentPage(number));
   };
 
   // Получение данных с сервера
@@ -61,7 +65,7 @@ const Home = () => {
           <div className="pizza-notFound">К сожалению такой пиццы нет 😣</div>
         )}
       </div>
-      <Pagination onChangePage={(id) => setCurentPage(id)} />
+      <Pagination curentPage={curentPage} onChangePage={onChangePage} />
     </div>
   );
 };
