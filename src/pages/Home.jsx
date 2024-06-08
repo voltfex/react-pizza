@@ -20,7 +20,6 @@ const Home = () => {
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
-    console.log(id);
   };
 
   const onChangePage = (number) => {
