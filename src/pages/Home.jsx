@@ -10,13 +10,12 @@ import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { categoryId, sort, curentPage } = useSelector((state) => state.filter);
+  const { categoryId, sort, curentPage, searchValue } = useSelector((state) => state.filter);
   const { items, status } = useSelector((state) => state.pizza);
-
-  const { searchValue } = React.useContext(SearchContext);
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -68,7 +67,11 @@ const Home = () => {
           {status === 'loading' ? (
             [...new Array(6)].map((_, index) => <Skeleton key={index} />)
           ) : filteredItems.length ? (
-            filteredItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
+            filteredItems.map((obj) => (
+              <Link to={`/pizza/${obj.id}`}>
+                <PizzaBlock key={obj.id} {...obj} />
+              </Link>
+            ))
           ) : (
             <div className="pizza-notFound">К сожалению такой пиццы нет 😣</div>
           )}

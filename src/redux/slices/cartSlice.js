@@ -30,10 +30,11 @@ const cartSlice = createSlice({
     },
     minusItem(state, action) {
       const findItem = state.items.find((item) => item.id === action.payload);
-
       if (findItem) {
-        findItem.count--;
-        state.totalPrice -= findItem.price;
+        if (!findItem.count <= 0) {
+          findItem.count--;
+          state.totalPrice -= findItem.price;
+        }
       }
     },
     removeItem(state, action) {
@@ -46,6 +47,8 @@ const cartSlice = createSlice({
     },
   },
 });
+
+export const selectCart = (state) => state.cart;
 
 export const { addItem, removeItem, minusItem, claerItems } = cartSlice.actions;
 
