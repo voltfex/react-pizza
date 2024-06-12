@@ -1,21 +1,21 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
-import axios from 'axios';
 import Pagination from '../components/Pagination';
+
 import { SearchContext } from '../App';
+import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
+import { fetchPizzas } from '../redux/slices/pizzasSlice';
 
 const Home = () => {
   const dispatch = useDispatch();
   const { categoryId, sort, curentPage } = useSelector((state) => state.filter);
+  const { items, status } = useSelector((state) => state.pizza);
 
-  const [items, setItems] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
   const { searchValue } = React.useContext(SearchContext);
 
   const onChangeCategory = (id) => {
@@ -26,21 +26,24 @@ const Home = () => {
     dispatch(setCurentPage(number));
   };
 
-  // Получение данных с сервера
-  React.useEffect(() => {
-    setIsLoading(true);
+  const getPizzas = async () => {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const sortBy = sort.sortProperty.replace('-', '');
-    // const search = searchValue ? `&search=${searchValue}` : '';
-    axios
-      .get(
-        `https://66562e759f970b3b36c48e64.mockapi.io/items?page=${curentPage}&limit=4&${
-          categoryId ? `category=${categoryId}` : ''
-        }&sortBy=${sortBy}&order=${order}`,
-      )
-      .then((res) => setItems(res.data))
-      .then(() => setIsLoading(false));
+
+    dispatch(
+      fetchPizzas({
+        order,
+        sortBy,
+        categoryId,
+        curentPage,
+      }),
+    );
     window.scrollTo(0, 0);
+  };
+
+  // Рендер пицц  с сервера
+  React.useEffect(() => {
+    getPizzas();
   }, [categoryId, sort.sortProperty, curentPage]);
 
   // Получение пицц по поиску
@@ -55,15 +58,22 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {isLoading ? (
-          [...new Array(6)].map((_, index) => <Skeleton key={index} />)
-        ) : filteredItems.length ? (
-          filteredItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
-        ) : (
-          <div className="pizza-notFound">К сожалению такой пиццы нет 😣</div>
-        )}
-      </div>
+      {status === 'error' ? (
+        <div className="content__error-info">
+          <h2>Мы потеряли наши пиццы😕</h2>
+          <p>Попробуйте обновить страницу попозже</p>
+        </div>
+      ) : (
+        <div className="content__items">
+          {status === 'loading' ? (
+            [...new Array(6)].map((_, index) => <Skeleton key={index} />)
+          ) : filteredItems.length ? (
+            filteredItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
+          ) : (
+            <div className="pizza-notFound">К сожалению такой пиццы нет 😣</div>
+          )}
+        </div>
+      )}
       <Pagination curentPage={curentPage} onChangePage={onChangePage} />
     </div>
   );
