@@ -9,18 +9,17 @@ import Pagination from '../components/Pagination';
 
 import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
-import { Link } from 'react-router-dom';
 
-const Home = () => {
+const Home: React.FC = () => {
   const dispatch = useDispatch();
-  const { categoryId, sort, curentPage, searchValue } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
+  const { categoryId, sort, curentPage, searchValue } = useSelector((state: any) => state.filter);
+  const { items, status } = useSelector((state: any) => state.pizza);
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setCurentPage(number));
   };
 
@@ -29,6 +28,7 @@ const Home = () => {
     const sortBy = sort.sortProperty.replace('-', '');
 
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         order,
         sortBy,
@@ -45,7 +45,7 @@ const Home = () => {
   }, [categoryId, sort.sortProperty, curentPage]);
 
   // Получение пицц по поиску
-  const filteredItems = items.filter((item) => {
+  const filteredItems = items.filter((item: any) => {
     return item.title.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase());
   });
 
@@ -66,7 +66,7 @@ const Home = () => {
           {status === 'loading' ? (
             [...new Array(6)].map((_, index) => <Skeleton key={index} />)
           ) : filteredItems.length ? (
-            filteredItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
+            filteredItems.map((obj: any) => <PizzaBlock key={obj.id} {...obj} />)
           ) : (
             <div className="pizza-notFound">К сожалению такой пиццы нет 😣</div>
           )}
