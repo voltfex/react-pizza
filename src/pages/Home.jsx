@@ -7,7 +7,6 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 
-import { SearchContext } from '../App';
 import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
 import { Link } from 'react-router-dom';
@@ -67,11 +66,7 @@ const Home = () => {
           {status === 'loading' ? (
             [...new Array(6)].map((_, index) => <Skeleton key={index} />)
           ) : filteredItems.length ? (
-            filteredItems.map((obj) => (
-              <Link to={`/pizza/${obj.id}`}>
-                <PizzaBlock key={obj.id} {...obj} />
-              </Link>
-            ))
+            filteredItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)
           ) : (
             <div className="pizza-notFound">К сожалению такой пиццы нет 😣</div>
           )}
