@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -9,15 +9,16 @@ import Pagination from '../components/Pagination';
 
 import { setCategoryId, setCurentPage } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
+import { useAppDispatch } from '../redux/store';
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { categoryId, sort, curentPage, searchValue } = useSelector((state: any) => state.filter);
   const { items, status } = useSelector((state: any) => state.pizza);
 
-  const onChangeCategory = (id: number) => {
+  const onChangeCategory = React.useCallback((id: number) => {
     dispatch(setCategoryId(id));
-  };
+  }, []);
 
   const onChangePage = (number: number) => {
     dispatch(setCurentPage(number));
@@ -28,7 +29,6 @@ const Home: React.FC = () => {
     const sortBy = sort.sortProperty.replace('-', '');
 
     dispatch(
-      // @ts-ignore
       fetchPizzas({
         order,
         sortBy,
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onChangeCategory={onChangeCategory} />
-        <Sort />
+        <Sort value={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'error' ? (
